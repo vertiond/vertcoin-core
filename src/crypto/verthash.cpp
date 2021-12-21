@@ -11,7 +11,7 @@
 #define HEADER_SIZE 80
 #define HASH_OUT_SIZE 32
 #define P0_SIZE 64
-#define N_ITER 8 
+#define N_ITER 8
 #define N_SUBSET P0_SIZE*N_ITER
 #define N_ROT 32
 #define N_INDEXES 4096
@@ -29,7 +29,7 @@ bool Verthash::VerifyDatFile()
 {
     CSHA256 ctx;
     if(!datFileInRam) {
-        fs::path dataFile = GetDataDir() / "verthash.dat";
+        fs::path dataFile = gArgs.GetDataDirNet() / "verthash.dat";
         if(!boost::filesystem::exists(dataFile)) {
             throw std::runtime_error("Verthash datafile not found");
         }
@@ -41,7 +41,7 @@ bool Verthash::VerifyDatFile()
         while((bytes_read = fread(buffer, 1, 32768, datfile))) {
             ctx.Write(buffer, bytes_read);
         }
-        fclose(datfile);    
+        fclose(datfile);
     } else {
         ctx.Write(datFile, datFileSize);
     }
@@ -50,13 +50,13 @@ bool Verthash::VerifyDatFile()
     ctx.Finalize((unsigned char*)&hash);
     if(hash == verthashDatFileHash) {
         return true;
-    } 
+    }
     LogPrintf("Verthash Datafile's hash is invalid - got %s expected %s", hash.GetHex(), verthashDatFileHash.GetHex());
     return false;
 }
 
 void Verthash::LoadInRam() {
-    fs::path dataFile = GetDataDir() / "verthash.dat";
+    fs::path dataFile = gArgs.GetDataDirNet() / "verthash.dat";
     if(!boost::filesystem::exists(dataFile)) {
         throw std::runtime_error("Verthash datafile not found");
     }
@@ -80,11 +80,11 @@ void Verthash::Hash(const char* input, char* output)
 {
     unsigned char input_header[HEADER_SIZE];
 
-    memcpy(&input_header[0], input, HEADER_SIZE);   
+    memcpy(&input_header[0], input, HEADER_SIZE);
 
     unsigned char p1[HASH_OUT_SIZE];
     sha3(&input_header[0], HEADER_SIZE, &p1[0], HASH_OUT_SIZE);
-	
+
     unsigned char p0[N_SUBSET];
 
     for(size_t i = 0; i < N_ITER; i++) {
@@ -106,7 +106,7 @@ void Verthash::Hash(const char* input, char* output)
     FILE* VerthashDatFile;
 
     if(!datFileInRam) {
-        fs::path dataFile = GetDataDir() / "verthash.dat";
+        fs::path dataFile = gArgs.GetDataDirNet() / "verthash.dat";
         if(!boost::filesystem::exists(dataFile)) {
             throw std::runtime_error("Verthash datafile not found");
         }
@@ -118,7 +118,7 @@ void Verthash::Hash(const char* input, char* output)
     uint32_t* p1_32 = (uint32_t*)p1;
     uint32_t value_accumulator = 0x811c9dc5;
     const uint32_t mdiv = ((datfile_sz - HASH_OUT_SIZE)/BYTE_ALIGNMENT) + 1;
-    
+
     if(!datFileInRam) {
         for(size_t i = 0; i < N_INDEXES; i++) {
             const long offset = (fnv1a(seek_indexes[i], value_accumulator) % mdiv) * BYTE_ALIGNMENT;
@@ -136,7 +136,7 @@ void Verthash::Hash(const char* input, char* output)
     } else {
         uint32_t* blob_bytes_32 = (uint32_t*)datFile;
         for(size_t i = 0; i < N_INDEXES; i++) {
-            const uint32_t offset = (fnv1a(seek_indexes[i], value_accumulator) % mdiv) * BYTE_ALIGNMENT/sizeof(uint32_t); 
+            const uint32_t offset = (fnv1a(seek_indexes[i], value_accumulator) % mdiv) * BYTE_ALIGNMENT/sizeof(uint32_t);
             for(size_t i2 = 0; i2 < HASH_OUT_SIZE/sizeof(uint32_t); i2++) {
                 const uint32_t value = *(blob_bytes_32 + offset + i2);
                 uint32_t* p1_ptr = p1_32 + i2;
