@@ -135,6 +135,7 @@ namespace {
 } // namespace
 
 // Internal stuff from blockstorage ...
+extern ChainstateManager* g_chainman;
 extern RecursiveMutex cs_LastBlockFile;
 extern std::vector<CBlockFileInfo> vinfoBlockFile;
 extern int nLastBlockFile;
@@ -3006,7 +3007,7 @@ void CChainState::ReceivedBlockTransactions(const CBlock& block, CBlockIndex* pi
 static bool CheckBlockHeader(const CBlockHeader& block, BlockValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true)
 {
     // Get prev block index
-    CBlockIndex* pindexPrev = LookupBlockIndex(block.hashPrevBlock);
+    CBlockIndex* pindexPrev = g_chainman->m_blockman.LookupBlockIndex(block.hashPrevBlock);
     int nHeight = 0;
     if (pindexPrev) {
         nHeight = pindexPrev->nHeight + 1;
@@ -4260,7 +4261,7 @@ void CChainState::LoadExternalBlockFile(FILE* fileIn, FlatFilePos* dbp)
                     while (range.first != range.second) {
                         std::multimap<uint256, FlatFilePos>::iterator it = range.first;
                         std::shared_ptr<CBlock> pblockrecursive = std::make_shared<CBlock>();
-                        CBlockIndex* idx = LookupBlockIndex(it->first);
+                        CBlockIndex* idx = m_blockman.LookupBlockIndex(it->first);
                         int nHeight = 0;
                         if(idx) {
                             nHeight = idx->nHeight;
