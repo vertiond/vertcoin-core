@@ -3093,6 +3093,12 @@ bool CheckBlock(const CBlock& block, BlockValidationState& state, const Consensu
     return true;
 }
 
+bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const Consensus::Params& params)
+{
+    int height = pindexPrev == nullptr ? 0 : pindexPrev->nHeight + 1;
+    return (height >= params.SegwitHeight);
+}
+
 void UpdateUncommittedBlockStructures(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams)
 {
     int commitpos = GetWitnessCommitmentIndex(block);
