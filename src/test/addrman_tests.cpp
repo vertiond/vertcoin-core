@@ -586,7 +586,7 @@ BOOST_AUTO_TEST_CASE(caddrinfo_get_tried_bucket)
 {
     CAddrManTest addrman;
 
-    CAddress addr1 = CAddress(ResolveService("250.1.1.1", 8333), NODE_NONE);
+    CAddress addr1 = CAddress(ResolveService("250.1.1.1", 5889), NODE_NONE);
     CAddress addr2 = CAddress(ResolveService("250.1.1.1", 9999), NODE_NONE);
 
     CNetAddr source1 = ResolveIP("250.1.1.1");
@@ -641,7 +641,7 @@ BOOST_AUTO_TEST_CASE(caddrinfo_get_new_bucket)
 {
     CAddrManTest addrman;
 
-    CAddress addr1 = CAddress(ResolveService("250.1.2.1", 8333), NODE_NONE);
+    CAddress addr1 = CAddress(ResolveService("250.1.2.1", 5889), NODE_NONE);
     CAddress addr2 = CAddress(ResolveService("250.1.2.1", 9999), NODE_NONE);
 
     CNetAddr source1 = ResolveIP("250.1.2.1");
