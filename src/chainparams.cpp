@@ -7,11 +7,9 @@
 
 #include <chainparamsseeds.h>
 #include <consensus/merkle.h>
+#include <deploymentinfo.h>
 #include <hash.h> // for signet block challenge hash
-#include <tinyformat.h>
 #include <util/system.h>
-#include <util/strencodings.h>
-#include <versionbitsinfo.h>
 
 #include <assert.h>
 
@@ -58,7 +56,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 }
 
 /**
- * Main network
+ * Main network on which people trade goods and services.
  */
 class CMainParams : public CChainParams {
 public:
@@ -75,7 +73,7 @@ public:
         consensus.CSVHeight = 691488;
         consensus.SegwitHeight = 713664;
         consensus.MinBIP9WarningHeight = 715680; // segwit activation height + miner confirmation window
-        
+
         // powLimit should not be too high to produce blocks 2.5 mins apart.
         consensus.powLimit = uint256S("0007ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80");
         // Value for previous forks
@@ -87,8 +85,12 @@ public:
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
 
-        // Deployment of Taproot (BIPs 340-342) 
+        // Deployment of Taproot (BIPs 340-342)
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = 1625097600; // July 1, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = 1628899200; // August 14, 2021
@@ -120,7 +122,7 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("0x4af38ca0e323c0a5226208a73b7589a52c030f234810cf51e13e3249fc0123e7"));
 
         vSeeds.emplace_back("useast1.vtconline.org"); // James Lovejoy
-        vSeeds.emplace_back("vtc.gertjaap.org"); // Gert-Jaap Glasbergen 
+        vSeeds.emplace_back("vtc.gertjaap.org"); // Gert-Jaap Glasbergen
         vSeeds.emplace_back("vert.idzstad.pl"); // Jaroslaw (jk_14)
         vSeeds.emplace_back("vtcseed.javerity.com"); // Matt C. (cruelnovo)
         vSeeds.emplace_back("dnsseed.vertcoin.cc"); // DB Keys
@@ -133,7 +135,7 @@ public:
 
         bech32_hrp = "vtc";
 
-        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
+        vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_main), std::end(chainparams_seed_main));
 
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
@@ -158,6 +160,10 @@ public:
             }
         };
 
+        m_assumeutxo_data = MapAssumeutxo{
+         // TODO to be specified in a future patch.
+        };
+
         chainTxData = ChainTxData{
             // Data from rpc: getchaintxstats 16384 3a9d0a6b19f4c20959caef1bad1a7aa18e492c049327ccaf3b3fcf7c3815f4e0
             1648016191, // nTime
@@ -175,7 +181,7 @@ public:
 };
 
 /**
- * Testnet (v3)
+ * Testnet (v3): public test network which is reset from time to time.
  */
 class CTestNetParams : public CChainParams {
 public:
@@ -192,7 +198,7 @@ public:
         consensus.CSVHeight = 300;
         consensus.SegwitHeight = 300;
         consensus.MinBIP9WarningHeight = 350; // segwit activation height + miner confirmation window
-        
+
         // TODO Determine correct value based on average miner performance / expected nethash
         // powLimit should not be too high to produce blocks 2.5 mins apart.
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -204,6 +210,11 @@ public:
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 26; // 75% for testchains
         consensus.nMinerConfirmationWindow = 50; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
+
 
         // Deployment of Taproot (BIPs 340-342) TODO: Set parameters
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
@@ -211,10 +222,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = 1630713600; // September 4, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
 
-        // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000100010");
-
-        // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x69ab56f74d75afa90b65b1fe10df8adaf2769e2ba64df1e1dc99c4d6717e1a2a"); //9000
 
         pchMessageStart[0] = 'v';
@@ -244,7 +252,7 @@ public:
 
         bech32_hrp = "tvtc";
 
-        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
+        vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_test), std::end(chainparams_seed_test));
 
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
@@ -257,6 +265,10 @@ public:
             }
         };
 
+        m_assumeutxo_data = MapAssumeutxo{
+            // TODO to be specified in a future patch.
+        };
+
         chainTxData = ChainTxData{
             // Data as of block 00000000000001c200b9790dc637d3bb141fe77d155b966ed775b17e109f7c6c (height 1156179)
             1481291250,
@@ -267,7 +279,7 @@ public:
 };
 
 /**
- * Signet
+ * Signet: test network with an additional consensus parameter (see BIP325).
  */
 class SigNetParams : public CChainParams {
 public:
@@ -281,8 +293,8 @@ public:
             vSeeds.emplace_back("2a01:7c8:d005:390::5");
             vSeeds.emplace_back("v7ajjeirttkbnt32wpy3c6w3emwnfr3fkla7hpxcfokr3ysd3kqtzmqd.onion:38333");
 
-            consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000000019fd16269a");
-            consensus.defaultAssumeValid = uint256S("0x0000002a1de0f46379358c1fd09906f7ac59adf3712323ed90eb59e4c183c020"); // 9434
+            consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000008546553c03");
+            consensus.defaultAssumeValid = uint256S("0x000000187d4440e5bff91488b700a140441e089a8aaea707414982460edbfe54"); // 47200
             m_assumed_blockchain_size = 1;
             m_assumed_chain_state_size = 0;
             chainTxData = ChainTxData{
@@ -375,7 +387,8 @@ public:
 };
 
 /**
- * Regression test
+ * Regression test: intended for private networks only. Has minimal difficulty to ensure that
+ * blocks can be found instantly.
  */
 class CRegTestParams : public CChainParams {
 public:
@@ -418,7 +431,7 @@ public:
         pchMessageStart[2] = 0xb5;
         pchMessageStart[3] = 0xdb;
         nDefaultPort = 18444;
-        nPruneAfterHeight = 1000;
+        nPruneAfterHeight = args.GetBoolArg("-fastprune", false) ? 100 : 1000;
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
@@ -441,6 +454,17 @@ public:
             {
                 {0, uint256S("2399c0b047ebbbd1650d66867206c97317027b1a1932bc6fc17ce833dc4a85ce")},
             }
+        };
+
+        m_assumeutxo_data = MapAssumeutxo{
+            {
+                110,
+                {AssumeutxoHash{uint256S("0x1ebbf5850204c0bdb15bf030f47c7fe91d45c44c712697e4509ba67adb01c618")}, 110},
+            },
+            {
+                200,
+                {AssumeutxoHash{uint256S("0x51c8d11d8b5c1de51543c579736e786aa2736206d1e11e627568029ce092cf62")}, 200},
+            },
         };
 
         chainTxData = ChainTxData{

@@ -8,9 +8,9 @@ src/vertcoin-cli
 src/vertcoin-gui
 src/vertcoin-node
 src/vertcoin-tx
+src/vertcoin-util
 src/vertcoin-wallet
-src/test/fuzz/*
-!src/test/fuzz/*.*
+src/test/fuzz/fuzz
 src/test/test_bitcoin
 src/qt/test/test_bitcoin-qt
 
@@ -61,7 +61,7 @@ src/qt/bitcoin-qt.includes
 .dirstamp
 .libs
 .*.swp
-*.*~*
+*~
 *.bak
 *.rej
 *.orig
@@ -76,6 +76,7 @@ src/qt/bitcoin-qt.includes
 *.log
 *.trs
 *.dmg
+*.iso
 
 *.json.h
 *.raw.h
@@ -139,14 +140,14 @@ test/.mypy_cache/
 libbitcoinconsensus.pc
 contrib/devtools/split-debug.sh
 
-.vscode/settings.json
-
 # Output from running db4 installation
 db4/
 
 # clang-check
 *.plist
+
 osx_volname
 dist/
 *.background.tiff
 
+/guix-build-*

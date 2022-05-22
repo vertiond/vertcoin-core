@@ -96,11 +96,17 @@ in the body of the pull request to indicate tasks are pending.
 
 ### Address Feedback
 
-Squashing Commits
----------------------------
-If your pull request is accepted for merging, you may be asked by a maintainer
-to squash and or [rebase](https://git-scm.com/docs/git-rebase) your commits
-before it will be merged. The basic squashing workflow is shown below.
+At this stage, one should expect comments and review from other contributors. You
+can add more commits to your pull request by committing them locally and pushing
+to your fork until you have satisfied all feedback.
+
+Note: Code review is a burdensome but important part of the development process, and as such, certain types of pull requests are rejected. In general, if the **improvements** do not warrant the **review effort** required, the PR has a high chance of being rejected. It is up to the PR author to convince the reviewers that the changes warrant the review effort, and if reviewers are "Concept NACK'ing" the PR, the author may need to present arguments and/or do research backing their suggested changes.
+
+### Squashing Commits
+
+If your pull request contains fixup commits (commits that change the same line of code repeatedly) or too fine-grained
+commits, you may be asked to [squash](https://git-scm.com/docs/git-rebase#_interactive_mode) your commits
+before it will be reviewed. The basic squashing workflow is shown below.
 
     git checkout your_branch_name
     git rebase -i HEAD~n
