@@ -671,7 +671,6 @@ struct CNodeState {
      */
     bool fSupportsDesiredCmpctVersion{false};
     //! Length of current-streak of unconnecting headers announcements
-    int nDuplicateHeaderRequests{0};
 
     /** State used to enforce CHAIN_SYNC_TIMEOUT and EXTRA_PEER_CHECK_INTERVAL logic.
       *
