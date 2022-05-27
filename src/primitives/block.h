@@ -53,6 +53,8 @@ public:
 
     uint256 GetHash() const;
 
+    uint256 GetPoWHash(const int nHeight) const;
+
     NodeSeconds Time() const
     {
         return NodeSeconds{std::chrono::seconds{nTime}};
@@ -61,6 +63,11 @@ public:
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;
+    }
+
+    char* begin() const
+    {
+        return ((char*)&(nVersion));
     }
 };
 
