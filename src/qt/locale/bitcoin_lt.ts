@@ -75,6 +75,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Tai jūsų Bitcoin mokėjimų gavimo adresai. Naudokite 'Sukurti naują gavimo adresą' mygtuką gavimų skirtuke kad sukurtumėte naują adresą.</translation>
     </message>
     <message>
+        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+Signing is only possible with addresses of the type 'legacy'.</source>
+        <translation type="unfinished">Tai jūsų Bitcoin mokėjimų gavimo adresai. Naudokite 'Sukurti naują gavimo adresą' mygtuką gavimų skirtuke kad sukurtumėte naują adresą.</translation>
+    </message>
+    <message>
         <source>&amp;Copy Address</source>
         <translation type="unfinished">&amp;Kopijuoti adresą</translation>
     </message>

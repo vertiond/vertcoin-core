@@ -281,6 +281,10 @@
         <translation>&amp;දළ විශ්ලේෂණය</translation>
     </message>
     <message>
+        <source>&amp;Overview</source>
+        <translation>&amp;දළ විශ්ලේෂණය</translation>
+    </message>
+    <message>
         <source>Browse transaction history</source>
         <translation>ගනුදෙනු ඉතිහාසය පිරික්සන්න</translation>
     </message>

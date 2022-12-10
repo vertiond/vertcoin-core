@@ -76,6 +76,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 Firmar é posible unicamente con enderezos de tipo 'legacy'.</translation>
     </message>
     <message>
+        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+Signing is only possible with addresses of the type 'legacy'.</source>
+        <translation type="unfinished">Estes son os teus enderezos de Bitcoin para recibir pagamentos. Emprega o botón 'Crear novo enderezo para recibir pagamentos' na solapa de recibir para crear novos enderezos.
+Firmar é posible unicamente con enderezos de tipo 'legacy'.</translation>
+    </message>
+    <message>
         <source>&amp;Copy Address</source>
         <translation type="unfinished">&amp;Copiar Enderezo</translation>
     </message>

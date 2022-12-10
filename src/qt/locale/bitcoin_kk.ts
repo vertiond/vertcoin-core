@@ -324,6 +324,14 @@
         <translation>Негізгі әмиян шолуды көрсету</translation>
     </message>
     <message>
+        <source>&amp;Overview</source>
+        <translation>&amp;Шолу</translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation>Негізгі әмиян шолуды көрсету</translation>
+    </message>
+    <message>
         <source>&amp;Transactions</source>
         <translation>&amp;Транзакциялар</translation>
     </message>
@@ -920,6 +928,10 @@
     </context>
 <context>
     <name>vertcoin-core</name>
+    <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation type="unfinished">-fallbackfee=&lt;amount&gt; үшін қате сан: "%s"</translation>
+    </message>
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation type="unfinished">-fallbackfee=&lt;amount&gt; үшін қате сан: "%s"</translation>
