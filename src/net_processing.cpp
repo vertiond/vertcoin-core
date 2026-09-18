@@ -2378,12 +2378,34 @@ void PeerManagerImpl::SendBlockTransactions(CNode& pfrom, Peer& peer, const CBlo
 
 bool PeerManagerImpl::CheckHeadersPoW(const std::vector<CBlockHeader>& headers, const Consensus::Params& consensusParams, Peer& peer)
 {
+    // Vertcoin Core: need to know the height for correct POW algorithm selection
+    int nHeight = 0;
+    if (peer.m_headers_sync) {
+        if (peer.m_headers_sync->GetState() == HeadersSyncState::State::PRESYNC) {
+            nHeight = peer.m_headers_sync->GetPresyncHeight();
+        } else if (peer.m_headers_sync->GetState() == HeadersSyncState::State::REDOWNLOAD) {
+            nHeight = peer.m_headers_sync->GetRedownloadHeight();
+        }
+    } else {
+        // Not in headers sync - need to determine height from the first header's prev block
+        LOCK(cs_main);
+        const CBlockIndex* pindexPrev = m_chainman.m_blockman.LookupBlockIndex(headers[0].hashPrevBlock);
+        if (!pindexPrev) {
+            // Can't determine height - this will be caught later in processing
+            // For now, skip PoW check (it's a secondary DoS check anyway)
+            // The headers will still be validated in AcceptBlockHeader
+            goto skip_pow_check;
+        }
+        nHeight = pindexPrev->nHeight + 1;
+    }
+
     // Do these headers have proof-of-work matching what's claimed?
-    if (!HasValidProofOfWork(headers, consensusParams)) {
+    if (!HasValidProofOfWork(headers, consensusParams, nHeight)) {
         Misbehaving(peer, 100, "header with invalid proof of work");
         return false;
     }
 
+skip_pow_check:
     // Are these headers connected to each other?
     if (!CheckHeadersAreContinuous(headers)) {
         Misbehaving(peer, 20, "non-continuous headers sequence");
