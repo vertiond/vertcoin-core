@@ -66,7 +66,8 @@ util::Result<void> ApplyArgsManOptions(const ArgsManager& argsman, const CChainP
         }
     }
 
-    static_assert(DEFAULT_MIN_RELAY_TX_FEE == DEFAULT_INCREMENTAL_RELAY_FEE);
+    // Vertcoin: the default min relay fee is deliberately above the incremental relay fee (as in 23.x/24.x: 100000 vs 1000); the code below only has to handle the opposite case.
+    static_assert(DEFAULT_MIN_RELAY_TX_FEE >= DEFAULT_INCREMENTAL_RELAY_FEE);
     if (const auto arg{argsman.GetArg("-minrelaytxfee")}) {
         if (std::optional<CAmount> min_relay_feerate = ParseMoney(*arg)) {
             // High fee check is done afterward in CWallet::Create()
